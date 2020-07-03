@@ -177,7 +177,7 @@ def main(_argv):
             ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
                             verbose=1,
                             save_weights_only=True,
-                            period=1000),
+                            period=140),
             TensorBoard(log_dir='logs')
         ]
 
