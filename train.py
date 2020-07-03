@@ -43,6 +43,7 @@ flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weights` file if different, '
                      'useful in transfer learning with different number of classes')
 
+flags.DEFINE_integer('period',100,'period')
 
 def main(_argv):
 
@@ -177,7 +178,7 @@ def main(_argv):
             ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
                             verbose=1,
                             save_weights_only=True,
-                            period=140), #1000
+                            period=FLAGS.period), #1000
             TensorBoard(log_dir='logs')
         ]
 
