@@ -44,6 +44,7 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
                      'useful in transfer learning with different number of classes')
 
 flags.DEFINE_integer('period',100,'period')
+flags.DEFINE_integer('buffer_size',512,'buffer_size')
 
 def main(_argv):
 
@@ -61,7 +62,7 @@ def main(_argv):
     if FLAGS.dataset:
         train_dataset = dataset.load_tfrecord_dataset(
             FLAGS.dataset, FLAGS.classes, FLAGS.size)
-    train_dataset = train_dataset.shuffle(buffer_size=512)
+    train_dataset = train_dataset.shuffle(buffer_size=FLAGS.buffer_size)
     train_dataset = train_dataset.batch(FLAGS.batch_size)
     train_dataset = train_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
