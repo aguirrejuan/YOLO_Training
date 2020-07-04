@@ -45,7 +45,9 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
 
 flags.DEFINE_integer('period',100,'period')
 flags.DEFINE_integer('buffer_size',512,'buffer_size')
-flags.DEFINE_string('optimizer','Adam', 'Available optimizers: Adam, nAdam')
+flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
+                  'Adam : Adam Optimizer, '
+                  'nAdam: nAdam Optimizer')
 
 def main(_argv):
 
@@ -119,12 +121,10 @@ def main(_argv):
             # freeze everything
             freeze_all(model)
 
-    if FLAGS.optimizer == "Adam":
+    if FLAGS.optimizer == 'Adam':
         optimizer = tf.keras.optimizers.Adam(lr=FLAGS.learning_rate)
-    elif FLAGS.optimizer == "nAdam": 
+    elif FLAGS.optimizer == 'nAdam': 
         optimizer = tf.keras.optimizers.Nadam(lr=FLAGS.learning_rate)
-    else:
-        raise ValueError(f"optimizer {FLAGS.optimizer} not found try one of this: {Adam, nAdam}")
 
     loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes)
             for mask in anchor_masks]
