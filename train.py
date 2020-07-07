@@ -51,7 +51,7 @@ flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
 
 def main(_argv):
     
-    logging.info('==========================={}==============='.format(FLAGS.dataset))
+    
 
     if FLAGS.tiny:
         model = YoloV3Tiny(FLAGS.size, training=True,
