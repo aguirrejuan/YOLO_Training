@@ -49,12 +49,22 @@ flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
                   'Adam : Adam Optimizer, '
                   'nAdam: nAdam Optimizer')
 
+flag.DEFINE_string('TPU','TPU','train with TPU')
+
 def main(_argv):
-    try:
-        tpu= tf.distribute.cluster_resolver.TPUClusterResolver()
-        print('Running on TPU ', tpu.cluster_spec().as_dict()['worker'])
-    except:
-        tpu = None
+    if FLAGS.TPU == 'TPU':
+        try:
+            tpu= tf.distribute.cluster_resolver.TPUClusterResolver()
+            print('Running on TPU ', tpu.cluster_spec().as_dict()['worker'])
+        except:
+            tpu = None
+        if tpu: 
+            tf.config.experimental_connect_to_cluster(tpu)
+            tf.tpu.experimental.initialize_tpu_system(tpu)
+            strategy = tf.distribute.experimental.TPUStrategy(tpu)
+        else: 
+            strategy = tf.distribute.experimental.TPUStrategy(tpu)
+        print("REPLICAS: ", strategy.num_replicas_in_sync)
         
     if FLAGS.tiny:
         model = YoloV3Tiny(FLAGS.size, training=True,
