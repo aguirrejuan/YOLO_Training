@@ -50,9 +50,12 @@ flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
                   'nAdam: nAdam Optimizer')
 
 def main(_argv):
-    
-    
-
+    try:
+        tpu= tf.distribute.cluster_resolver.TPUClusterResolver()
+        print('Running on TPU ', tpu.cluster_spec().as_dict()['worker'])
+    except:
+        tpu = None
+        
     if FLAGS.tiny:
         model = YoloV3Tiny(FLAGS.size, training=True,
                            classes=FLAGS.num_classes)
