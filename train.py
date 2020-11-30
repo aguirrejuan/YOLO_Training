@@ -49,7 +49,7 @@ flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
                   'Adam : Adam Optimizer, '
                   'nAdam: nAdam Optimizer')
 
-flag.DEFINE_string('TPU','TPU','train with TPU')
+flags.DEFINE_string('TPU','TPU','train with TPU')
 
 def main(_argv):
     if FLAGS.TPU == 'TPU':
