@@ -65,7 +65,7 @@ def transform_targets(y_train, anchors, anchor_masks, size):
         y_outs.append(transform_targets_for_output(y_train, grid_size, anchor_idxs))
         grid_size *= 2
 
-    return y_outs
+    return tuple(y_outs)
 
 
 def transform_images(x_train, size):
