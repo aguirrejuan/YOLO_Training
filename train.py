@@ -63,7 +63,7 @@ def main(_argv):
             tf.tpu.experimental.initialize_tpu_system(tpu)
             strategy = tf.distribute.experimental.TPUStrategy(tpu)
         else: 
-            strategy = tf.distribute.experimental.TPUStrategy(tpu)
+            strategy = tf.distribute.get_strategy()
         print("REPLICAS: ", strategy.num_replicas_in_sync)
         
     if FLAGS.tiny:
