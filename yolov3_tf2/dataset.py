@@ -62,10 +62,10 @@ def transform_targets(y_train, anchors, anchor_masks, size):
     y_train = tf.concat([y_train, anchor_idx], axis=-1)
 
     for anchor_idxs in anchor_masks:
-        y_outs.append(tf.reshape(transform_targets_for_output(y_train, grid_size, anchor_idxs),(tf.shape(y_train)[0], grid_size, grid_size, tf.shape(anchor_idxs)[0], 6)))
+        y_outs.append(transform_targets_for_output(y_train, grid_size, anchor_idxs))
         grid_size *= 2
 
-    return tuple(y_outs)
+    return tuple(tf.reshape(y_outs[0],(tf.shape(y_train)[0], grid_size, grid_size, tf.shape(anchor_idxs)[0], 6)))
 
 
 def transform_images(x_train, size):
