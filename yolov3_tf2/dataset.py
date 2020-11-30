@@ -38,7 +38,6 @@ def transform_targets_for_output(y_true, grid_size, anchor_idxs):
 
     # tf.print(indexes.stack())
     # tf.print(updates.stack())
-    y_true_out = tf.reshape(y_true_out,(N, grid_size, grid_size, tf.shape(anchor_idxs)[0], 6))
     return tf.tensor_scatter_nd_update(
         y_true_out, indexes.stack(), updates.stack())
 
@@ -63,8 +62,7 @@ def transform_targets(y_train, anchors, anchor_masks, size):
     y_train = tf.concat([y_train, anchor_idx], axis=-1)
 
     for anchor_idxs in anchor_masks:
-        y_outs.append(transform_targets_for_output(
-            y_train, grid_size, anchor_idxs))
+        y_outs.append(tf.reshape(transform_targets_for_output(y_train, grid_size, anchor_idxs),(tf.shape(y_train)[0], grid_size, grid_size, tf.shape(anchor_idxs)[0], 6)))
         grid_size *= 2
 
     return tuple(y_outs)
