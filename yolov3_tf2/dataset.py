@@ -113,7 +113,7 @@ def parse_tfrecord(tfrecord, class_table, size):
                         labels], axis=1)
 
     paddings = [[0, 100 - tf.shape(y_train)[0]], [0, 0]] #FLAGS.yolo_max_boxes
-    y_train = tf.pad(y_train, paddings, name = 'si soy yo')
+    y_train = tf.pad(y_train, paddings, name = 'si_soy_yo')
 
     return x_train, y_train
 
