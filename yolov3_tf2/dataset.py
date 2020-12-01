@@ -136,5 +136,5 @@ def load_fake_dataset():
     ] + [[0, 0, 0, 0, 0]] * 5
     y_train = tf.convert_to_tensor(labels, tf.float32)
     y_train = tf.expand_dims(y_train, axis=0)
-
+    x_train = tf.cast(x_train, tf.float32)
     return tf.data.Dataset.from_tensor_slices((x_train, y_train))
