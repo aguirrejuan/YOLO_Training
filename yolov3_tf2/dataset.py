@@ -95,7 +95,7 @@ IMAGE_FEATURE_MAP = {
 }
 
 
-def parse_tfrecord(tfrecord, class_table, size):
+def parse_tfrecord(tfrecord, class_table, size,batch_size):
     x = tf.io.parse_single_example(tfrecord, IMAGE_FEATURE_MAP)
     x_train = tf.image.decode_jpeg(x['image/encoded'], channels=3)
     x_train = tf.image.resize(x_train, (size, size))
@@ -109,7 +109,7 @@ def parse_tfrecord(tfrecord, class_table, size):
                         tf.sparse.to_dense(x['image/object/bbox/ymax']),
                         labels], axis=1)
 
-    paddings = [[0, FLAGS.yolo_max_boxes - y_train.get_shape()[0]], [0, 0]]#tf.shape(y_train)[0]], [0, 0]] #
+    paddings = [[0, FLAGS.yolo_max_boxes - batch_size], [0, 0]] #tf.shape(y_train)[0]], [0, 0]] 
     y_train = tf.pad(y_train, paddings)
 
     return x_train, y_train
