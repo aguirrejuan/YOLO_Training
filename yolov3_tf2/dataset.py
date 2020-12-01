@@ -38,8 +38,7 @@ def transform_targets_for_output(y_true, grid_size, anchor_idxs):
 
     # tf.print(indexes.stack())
     # tf.print(updates.stack())
-    return tf.tensor_scatter_nd_update(
-        y_true_out, indexes.stack(), updates.stack())
+    return y_true_out #tf.tensor_scatter_nd_update(y_true_out, indexes.stack(), updates.stack())
 
 
 def transform_targets(y_train, anchors, anchor_masks, size):
