@@ -49,39 +49,40 @@ flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
                   'Adam : Adam Optimizer, '
                   'nAdam: nAdam Optimizer')
 
-flags.DEFINE_string('TPU','TPU','train with TPU')
 
 def main(_argv):
-    if FLAGS.TPU == 'TPU':
-        try:
-            tpu= tf.distribute.cluster_resolver.TPUClusterResolver()
-            print('Running on TPU ', tpu.cluster_spec().as_dict()['worker'])
-        except:
-            tpu = None
-        if tpu: 
-            tf.config.experimental_connect_to_cluster(tpu)
-            tf.tpu.experimental.initialize_tpu_system(tpu)
-            strategy = tf.distribute.experimental.TPUStrategy(tpu)
-        else: 
-            strategy = tf.distribute.get_strategy()
-        print("REPLICAS: ", strategy.num_replicas_in_sync)
+    
+    try:
+        tpu= tf.distribute.cluster_resolver.TPUClusterResolver()
+        print('Running on TPU ', tpu.cluster_spec().as_dict()['worker'])
+    except:
+        tpu = None
+    if tpu: 
+        tf.config.experimental_connect_to_cluster(tpu)
+        tf.tpu.experimental.initialize_tpu_system(tpu)
+        strategy = tf.distribute.experimental.TPUStrategy(tpu)
+    else: 
+        strategy = tf.distribute.get_strategy()
+     #print("REPLICAS: ", strategy.num_replicas_in_sync)
         
-    if FLAGS.tiny:
-        model = YoloV3Tiny(FLAGS.size, training=True,
+    with strategy.scope(): 
+        if FLAGS.tiny:
+            model = YoloV3Tiny(FLAGS.size, training=True,
                            classes=FLAGS.num_classes)
-        anchors = yolo_tiny_anchors
-        anchor_masks = yolo_tiny_anchor_masks
-    else:
-        model = YoloV3(FLAGS.size, training=True, classes=FLAGS.num_classes)
-        anchors = yolo_anchors
-        anchor_masks = yolo_anchor_masks
+            anchors = yolo_tiny_anchors
+            anchor_masks = yolo_tiny_anchor_masks
+        else:
+            model = YoloV3(FLAGS.size, training=True, classes=FLAGS.num_classes)
+            anchors = yolo_anchors
+            anchor_masks = yolo_anchor_masks
+        
 
     train_dataset = dataset.load_fake_dataset()
     if FLAGS.dataset:
         train_dataset = dataset.load_tfrecord_dataset(
             FLAGS.dataset, FLAGS.classes, FLAGS.size)
     train_dataset = train_dataset.shuffle(buffer_size=FLAGS.buffer_size)
-    train_dataset = train_dataset.batch(FLAGS.batch_size)
+    train_dataset = train_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync)
     train_dataset = train_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
         dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
@@ -92,7 +93,7 @@ def main(_argv):
     if FLAGS.val_dataset:
         val_dataset = dataset.load_tfrecord_dataset(
             FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
-    val_dataset = val_dataset.batch(FLAGS.batch_size)
+    val_dataset = val_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync)
     val_dataset = val_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
         dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
