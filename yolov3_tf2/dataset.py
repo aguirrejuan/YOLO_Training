@@ -1,7 +1,7 @@
 import tensorflow as tf
 from absl.flags import FLAGS
 
-#@tf.function
+@tf.function
 def transform_targets_for_output(y_true, grid_size, anchor_idxs):
     # y_true: (N, boxes, (x1, y1, x2, y2, class, best_anchor))
     N = tf.shape(y_true)[0]
@@ -38,7 +38,7 @@ def transform_targets_for_output(y_true, grid_size, anchor_idxs):
 
     # tf.print(indexes.stack())
     # tf.print(updates.stack())
-    return y_true_out #tf.tensor_scatter_nd_update(y_true_out, indexes.stack(), updates.stack())
+    return tf.tensor_scatter_nd_update(y_true_out, indexes.stack(), updates.stack())
 
 
 def transform_targets(y_train, anchors, anchor_masks, size):
