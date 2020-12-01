@@ -4,7 +4,7 @@ from absl.flags import FLAGS
 @tf.function
 def transform_targets_for_output(y_true, grid_size, anchor_idxs):
     # y_true: (N, boxes, (x1, y1, x2, y2, class, best_anchor))
-    N = 16#tf.shape(y_true)[0]
+    N = 128#tf.shape(y_true)[0]
 
     # y_true_out: (N, grid, grid, anchors, [x, y, w, h, obj, class])
     y_true_out = tf.zeros(
@@ -95,7 +95,7 @@ IMAGE_FEATURE_MAP = {
 }
 
 
-def parse_tfrecord(tfrecord, class_table, size,batch_size):
+def parse_tfrecord(tfrecord, class_table, size):
     x = tf.io.parse_single_example(tfrecord, IMAGE_FEATURE_MAP)
     x_train = tf.image.decode_jpeg(x['image/encoded'], channels=3)
     x_train = tf.image.resize(x_train, (size, size))
@@ -109,7 +109,7 @@ def parse_tfrecord(tfrecord, class_table, size,batch_size):
                         tf.sparse.to_dense(x['image/object/bbox/ymax']),
                         labels], axis=1)
 
-    paddings = [[0, FLAGS.yolo_max_boxes - batch_size], [0, 0]] #tf.shape(y_train)[0]], [0, 0]] 
+    paddings = [[0, FLAGS.yolo_max_boxes - tf.shape(y_train)[0]], [0, 0]] 
     y_train = tf.pad(y_train, paddings)
 
     return x_train, y_train
