@@ -82,7 +82,7 @@ def main(_argv):
         train_dataset = dataset.load_tfrecord_dataset(
             FLAGS.dataset, FLAGS.classes, FLAGS.size)
     train_dataset = train_dataset.shuffle(buffer_size=FLAGS.buffer_size)
-    train_dataset = train_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync)
+    train_dataset = train_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync,drop_remainder=True)
     train_dataset = train_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
         dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
@@ -93,7 +93,7 @@ def main(_argv):
     if FLAGS.val_dataset:
         val_dataset = dataset.load_tfrecord_dataset(
             FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
-    val_dataset = val_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync)
+    val_dataset = val_dataset.batch(FLAGS.batch_size*strategy.num_replicas_in_sync,drop_remainder=True)
     val_dataset = val_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
         dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
