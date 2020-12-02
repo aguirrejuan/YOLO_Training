@@ -97,6 +97,8 @@ def main(_argv):
     val_dataset = val_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
         dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
+    
+    tf.print(train_dataset, val_dataset)
 
     # Configure the model for transfer learning
     if FLAGS.transfer == 'none':
