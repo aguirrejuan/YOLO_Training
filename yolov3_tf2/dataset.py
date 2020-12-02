@@ -4,7 +4,7 @@ from absl.flags import FLAGS
 @tf.function
 def transform_targets_for_output(y_true, grid_size, anchor_idxs):
     # y_true: (N, boxes, (x1, y1, x2, y2, class, best_anchor))
-    N = 64#tf.shape(y_true)[0]
+    N = FLAGS.batch_size#tf.shape(y_true)[0]
 
     # y_true_out: (N, grid, grid, anchors, [x, y, w, h, obj, class])
     y_true_out = tf.zeros(
