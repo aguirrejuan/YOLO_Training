@@ -199,7 +199,7 @@ def main(_argv):
         callbacks = [
                 ReduceLROnPlateau(verbose=1),
                 EarlyStopping(patience=3, verbose=1),
-                ModelCheckpoint('yolov3_train_{epoch}.h5',
+                ModelCheckpoint(f'yolov3_train_{epoch}.h5',
                             verbose=1,
                             save_weights_only=True,
                             period=FLAGS.period), #1000
@@ -208,7 +208,7 @@ def main(_argv):
 
         history = model.fit(train_dataset,
                             epochs=FLAGS.epochs,
-                            #callbacks=callbacks,
+                            callbacks=callbacks,
                             validation_data=val_dataset)
 
 
