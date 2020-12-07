@@ -196,18 +196,10 @@ def main(_argv):
     else:
         model.compile(optimizer=optimizer, loss=loss,
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
-        #tpu don't support checkpoints yet 
-        if tpu:
-            callbacks = [
+        callbacks = [
                 ReduceLROnPlateau(verbose=1),
-    #            EarlyStopping(patience=3, verbose=1),
-                TensorBoard(log_dir='logs')
-            ]
-        else: 
-            callbacks = [
-                ReduceLROnPlateau(verbose=1),
-    #            EarlyStopping(patience=3, verbose=1),
-                ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
+                EarlyStopping(patience=3, verbose=1),
+                ModelCheckpoint('yolov3_train_{epoch}.h5',
                             verbose=1,
                             save_weights_only=True,
                             period=FLAGS.period), #1000
