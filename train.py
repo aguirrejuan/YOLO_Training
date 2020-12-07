@@ -196,15 +196,22 @@ def main(_argv):
     else:
         model.compile(optimizer=optimizer, loss=loss,
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
-        callbacks = [
+        if tpu:
+            callbacks = [
                 ReduceLROnPlateau(verbose=1),
                 EarlyStopping(patience=3, verbose=1),
-                ModelCheckpoint('yolov3_train_{epoch}.h5',
+                ModelCheckpoint('yolov3_train_{epoch}.h5', monitor='val_loss', mode='min', save_best_only=True), #1000
+                ]
+        else :
+            callbacks = [
+                ReduceLROnPlateau(verbose=1),
+                EarlyStopping(patience=3, verbose=1),
+                ModelCheckpoint('yolov3_train_{epoch}.tf',
                             verbose=1,
                             save_weights_only=True,
                             period=FLAGS.period), #1000
                 TensorBoard(log_dir='logs')
-            ]
+                ]
 
         history = model.fit(train_dataset,
                             epochs=FLAGS.epochs,
