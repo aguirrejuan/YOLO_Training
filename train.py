@@ -196,7 +196,7 @@ def main(_argv):
     else:
         model.compile(optimizer=optimizer, loss=loss,
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
-        if False:
+        if tpu:
             callbacks = [
                 ReduceLROnPlateau(verbose=1),
                 EarlyStopping(patience=3, verbose=1),
