@@ -206,7 +206,7 @@ def main(_argv):
             callbacks = [
                 ReduceLROnPlateau(verbose=1),
                 #EarlyStopping(patience=3, verbose=1),
-                ModelCheckpoint('yolov3_train_{epoch}.tf',
+                ModelCheckpoint('./checkpoints/yolov3_train_{epoch}.tf',
                             verbose=1,
                             save_weights_only=True,
                             period=FLAGS.period), #1000
