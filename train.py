@@ -46,7 +46,7 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
 flags.DEFINE_integer('period',100,'period')
 flags.DEFINE_integer('buffer_size',512,'buffer_size')
 flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam','Adagrad','RMSprop'],
-                  'Adam : Adam Optimizer, ' 'nAdam: nAdam Optimizer,' 'Adagrad: Adagrad Optimizer, ' 'RMSprop: RMSprop Optimizer)
+                  'Adam : Adam Optimizer, ' 'nAdam: nAdam Optimizer,' 'Adagrad: Adagrad Optimizer, ' 'RMSprop: RMSprop Optimizer')
 
 
 def main(_argv):
