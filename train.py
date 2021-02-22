@@ -144,7 +144,7 @@ def main(_argv):
     elif FLAGS.optimizer == 'Adagrad':
         optimizer = tf.keras.optimizers.Adagrad(lr=FLAGS.learning_rate)
     elif FLAGS.optimizer == 'RMSprop':
-        timizer = tf.keras.optimizers.RMSprop(lr=FLAGS.learning_rate, rho=0.9)
+        optimizer = tf.keras.optimizers.RMSprop(lr=FLAGS.learning_rate, rho=0.9)
 
     loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes)
             for mask in anchor_masks]
