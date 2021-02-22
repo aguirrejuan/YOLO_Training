@@ -45,9 +45,8 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
 
 flags.DEFINE_integer('period',100,'period')
 flags.DEFINE_integer('buffer_size',512,'buffer_size')
-flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam'],
-                  'Adam : Adam Optimizer, '
-                  'nAdam: nAdam Optimizer')
+flags.DEFINE_enum('optimizer','Adam', ['Adam', 'nAdam','Adagrad','RMSprop'],
+                  'Adam : Adam Optimizer, ' 'nAdam: nAdam Optimizer,' 'Adagrad: Adagrad Optimizer, ' 'RMSprop: RMSprop Optimizer)
 
 
 def main(_argv):
@@ -142,6 +141,10 @@ def main(_argv):
         optimizer = tf.keras.optimizers.Adam(lr=FLAGS.learning_rate)
     elif FLAGS.optimizer == 'nAdam': 
         optimizer = tf.keras.optimizers.Nadam(lr=FLAGS.learning_rate)
+    elif FLAGS.optimizer == 'Adagrad':
+        optimizer = tf.keras.optimizers.Adagrad(lr=FLAGS.learning_rate)
+    elif FLAGS.optimizer == 'RMSprop':
+        timizer = tf.keras.optimizers.RMSprop(lr=FLAGS.learning_rate, rho=0.9)
 
     loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes)
             for mask in anchor_masks]
